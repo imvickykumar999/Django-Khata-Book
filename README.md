@@ -1,2 +1,2 @@
-# `Admin Dashboard`
-![image](https://github.com/user-attachments/assets/55743509-64ed-4d74-9ebb-83471e2318d2)
+# `KhataBook Admin Dashboard`
+[![image](https://github.com/user-attachments/assets/d71d74aa-e305-4876-a116-b4cf3d1a3fbf)](https://adminkhatadashboard.pythonanywhere.com)
