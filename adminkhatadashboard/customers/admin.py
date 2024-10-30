@@ -29,8 +29,9 @@ class PurchaseAdmin(admin.ModelAdmin):
 
     def paid_status(self, obj):
         if obj.price < 0:
-            return format_html('<span style="color: red;">Paid</span>')
-        return ""
+            return format_html('<span style="color: green;">Paid</span>')
+        else:
+            return format_html('<span style="color: red;">-</span>')
 
     paid_status.short_description = 'Status'  # Column name in the admin interface
 
