@@ -8,19 +8,25 @@ class PurchaseInline(admin.TabularInline):
     extra = 1  # Number of extra blank forms
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'latest_purchase_date', 'total_amount_spent')  # Display total amount spent
-    inlines = [PurchaseInline]  # Shows purchases inline on the customer page
+    list_display = ('name', 'total_amount_spent', 'latest_purchase_date', 'customer_id')  # Added customer ID as a new column
+    search_fields = ('name', 'id')  # Enable search by customer name
+    inlines = [PurchaseInline]
+
+    def customer_id(self, obj):
+        return obj.id  # Returns the customer ID
+
+    customer_id.short_description = 'Customer ID'  # Column name in the admin interface
 
     def latest_purchase_date(self, obj):
-        latest_purchase = obj.purchases.order_by('-purchase_date').first()  # Get the latest purchase by date
+        latest_purchase = obj.purchases.order_by('-purchase_date').first()
         return latest_purchase.purchase_date if latest_purchase else "No purchases"
 
     def total_amount_spent(self, obj):
         total = obj.purchases.aggregate(total=Sum('price'))['total']
         return total if total else 0
 
-    latest_purchase_date.short_description = 'Latest Purchase Date'  # Column name in the admin interface
-    total_amount_spent.short_description = 'Total Amount Spent'  # Column name for total amount
+    latest_purchase_date.short_description = 'Latest Purchase Date'
+    total_amount_spent.short_description = 'Total Amount Spent'
 
 class PurchaseAdmin(admin.ModelAdmin):
     list_display = ('item_name', 'price', 'paid_status', 'customer', 'purchase_date')
