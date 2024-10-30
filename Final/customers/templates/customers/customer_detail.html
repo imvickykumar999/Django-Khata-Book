@@ -1,0 +1,8 @@
+<h2>{{ customer.name }}'s Purchases</h2>
+<ul>
+    {% for purchase in purchases %}
+        <li>{{ purchase.item_name }} - ${{ purchase.price }} on {{ purchase.purchase_date }}</li>
+    {% endfor %}
+</ul>
+<h3>Total Amount: ${{ total_amount }}</h3>
+<a href="{% url 'create_purchase' customer.id %}">Add Another Purchase</a>
