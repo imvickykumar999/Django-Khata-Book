@@ -10,6 +10,7 @@ class PurchaseInline(admin.TabularInline):
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ('name', 'total_amount_spent', 'latest_purchase_date', 'customer_id')  # Added customer ID as a new column
     search_fields = ('name', 'id')  # Enable search by customer name
+    list_filter = ('purchases__purchase_date',)  # Enable filtering by purchase date
     inlines = [PurchaseInline]
 
     def customer_id(self, obj):
