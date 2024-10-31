@@ -1,3 +1,13 @@
+# `KhataBook` [`Admin Dashboard`](https://vickskhatabook.pythonanywhere.com/admin/customers/purchase/)
+
+    unzip /home/vickskhatabook/app.zip
+    find /home/vickskhatabook -type d -exec chmod 755 {} +
+    pip install -U django-jazzmin
+    python manage.py collectstatic
+    zip -r project.zip .
+
+---
+
 ## Connect mobile via USB to laptop
 
 ```bash
