@@ -1,0 +1,76 @@
+<h2>{{ customer.name }}'s Purchases</h2>
+
+<!-- Search input -->
+<input type="text" id="search-input" placeholder="Search purchases..." onkeyup="fetchPurchases()">
+
+<!-- Table for purchases -->
+<table id="purchase-table">
+    <thead>
+        <tr>
+            <th><a href="#" onclick="sortPurchases('item_name')">Item Name</a></th>
+            <th><a href="#" onclick="sortPurchases('price')">Price</a></th>
+            <th><a href="#" onclick="sortPurchases('purchase_date')">Purchase Date</a></th>
+        </tr>
+    </thead>
+    <tbody id="purchase-tbody">
+        <!-- Purchases will be loaded here via AJAX -->
+    </tbody>
+</table>
+
+<!-- Pagination controls -->
+<div id="pagination-controls">
+    <button onclick="fetchPurchases(page - 1)" id="prev-button" disabled>Previous</button>
+    <button onclick="fetchPurchases(page + 1)" id="next-button" disabled>Next</button>
+</div>
+
+<h3>Total Amount: $<span id="total-amount">{{ total_amount }}</span></h3>
+<a href="{% url 'create_purchase' customer.id %}">Add Another Purchase</a>
+
+<script>
+    let page = 1;
+    let sortField = 'item_name';
+    let sortDirection = 'asc';
+    let searchQuery = '';
+
+    function fetchPurchases(pageNumber = 1) {
+        page = pageNumber;
+        searchQuery = document.getElementById('search-input').value;
+        
+        fetch(`{% url 'purchase_list_ajax' customer.id %}?page=${page}&sort=${sortField}&direction=${sortDirection}&search=${searchQuery}`)
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('purchase-tbody');
+                tbody.innerHTML = '';
+                
+                // Populate the table with fetched purchases
+                data.purchases.forEach(purchase => {
+                    const row = `<tr>
+                        <td>${purchase.item_name}</td>
+                        <td>$${purchase.price}</td>
+                        <td>${purchase.purchase_date}</td>
+                    </tr>`;
+                    tbody.insertAdjacentHTML('beforeend', row);
+                });
+
+                // Update total amount
+                document.getElementById('total-amount').innerText = data.total_amount;
+
+                // Update pagination buttons
+                document.getElementById('prev-button').disabled = !data.has_previous;
+                document.getElementById('next-button').disabled = !data.has_next;
+            });
+    }
+
+    function sortPurchases(field) {
+        if (sortField === field) {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortField = field;
+            sortDirection = 'asc';
+        }
+        fetchPurchases();
+    }
+
+    // Initial fetch
+    document.addEventListener('DOMContentLoaded', () => fetchPurchases());
+</script>
