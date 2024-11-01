@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-mdej@auc%hp8tc&#)dc7^&jemdi+2#t2f5u(7=3hln)5of_!(8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['adminkhatadashboard.pythonanywhere.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['adminkhatadashboard.pythonanywhere.com', '127.0.0.1', 'localhost', '192.168.0.105']
 
 
 # Application definition
