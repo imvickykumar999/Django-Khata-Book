@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
+        /* Sidebar styling */
+        .sidebar {
+            height: 100%; /* Full-height */
+            width: 250px; /* Width of the sidebar */
+            position: fixed; /* Fixed Sidebar */
+            top: 0;
+            left: -250px; /* Hide the sidebar offscreen */
+            background-color: #007bff; /* Background color */
+            overflow-x: hidden; /* Disable horizontal scroll */
+            transition: left 0.3s; /* Animation */
+            padding-top: 20px; /* Padding at the top */
+            z-index: 1000; /* Layer above content */
+        }
+        
+        .sidebar.active {
+            left: 0; /* Show the sidebar */
+        }
+        
+        /* Sidebar links */
+        .sidebar h2 {
+            color: white;
+            text-align: center;
+        }
+        
+        .sidebar ul {
+            list-style-type: none; /* Remove bullets */
+            padding: 0; /* Remove default padding */
+        }
+        
+        .sidebar ul li {
+            padding: 15px; /* Padding for each link */
+        }
+        
+        .sidebar ul li a {
+            color: white; /* Link color */
+            text-decoration: none; /* Remove underline */
+            display: block; /* Make links block elements */
+        }
+        
+        /* Change link color on hover */
+        .sidebar ul li a:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        
+        /* Content area */
+        .content {
+            margin-left: 0; /* No margin for initial state */
+            transition: margin-left 0.3s; /* Animation */
+            padding: 20px; /* Padding for content */
+        }
+        
+        /* Toggle button */
+        .toggle-button {
+            background-color: #007bff; /* Button color */
+            color: white; /* Text color */
+            border: none; /* Remove border */
+            padding: 10px; /* Padding */
+            cursor: pointer; /* Cursor on hover */
+            position: fixed; /* Position fixed */
+            right: 20px; /* Positioning from the right */
+            top: 20px; /* Positioning from the top */
+            z-index: 1001; /* Above sidebar */
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 600px) {
+            .sidebar {
+                width: 200px; /* Smaller width for mobile */
+            }
+        }        
+    </style>
+    <title>Your Site Title</title>
+</head>
+<body>
+    <nav class="navbar">
+        <button class="toggle-button" onclick="toggleSidebar()">☰</button>
+    </nav>
+    
+    <div class="sidebar" id="sidebar">
+        <h2>Navigation</h2>
+        <ul>
+            <li><a href="{% url 'customer_list' %}">Customers</a></li>
+            <li><a href="{% url 'create_customer' %}">Add Customer</a></li>
+            <li><a href="{% url 'register' %}">Register</a></li>
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

@@ -19,7 +19,7 @@ def register_user(request):
             return redirect('login')
     else:
         form = UserRegisterForm()
-    return render(request, 'users/register.html', {'form': form})
+    return render(request, 'customers/register.html', {'form': form})
 
 def login_user(request):
     if request.method == 'POST':
@@ -33,7 +33,7 @@ def login_user(request):
                 return redirect('customer_list')  # Redirect to the main page
     else:
         form = AuthenticationForm()
-    return render(request, 'users/login.html', {'form': form})
+    return render(request, 'customers/login.html', {'form': form})
 
 @login_required
 def logout_user(request):

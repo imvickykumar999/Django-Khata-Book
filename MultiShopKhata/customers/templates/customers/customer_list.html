@@ -1,0 +1,196 @@
+{% extends 'customers/base.html' %}
+
+{% block title %}Customer List{% endblock %}
+
+{% block content %}
+
+<h2>Customer List</h2>
+
+<!-- Search input -->
+<input type="text" id="search-input" placeholder="Search customers..." onkeyup="fetchCustomers()">
+
+<!-- Table for customer list -->
+<table id="customer-table">
+    <thead>
+        <tr>
+            <th><a href="#" onclick="sortCustomers('id')">ID</a></th>
+            <th><a href="#" onclick="sortCustomers('name')">Name</a></th>
+            <th>Profile Photo</th>
+        </tr>
+    </thead>
+    <tbody id="customer-tbody">
+        <!-- Customer data will be loaded here via AJAX -->
+    </tbody>
+</table>
+
+<!-- Pagination controls -->
+<div id="pagination-controls">
+    <button onclick="fetchCustomers(page - 1)" id="prev-button" disabled>Previous</button>
+    <button onclick="fetchCustomers(page + 1)" id="next-button" disabled>Next</button>
+</div>
+
+<br><br>
+<a href="{% url 'create_customer' %}">Add New Customer</a>
+
+<script>
+    let page = 1;
+    let sortField = 'id';
+    let sortDirection = 'asc';
+    let searchQuery = '';
+
+    function fetchCustomers(pageNumber = 1) {
+        page = pageNumber;
+        searchQuery = document.getElementById('search-input').value;
+
+        fetch(`{% url 'customer_list_ajax' %}?page=${page}&sort=${sortField}&direction=${sortDirection}&search=${searchQuery}`)
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('customer-tbody');
+                tbody.innerHTML = '';
+
+                // Populate the table with fetched customers
+                data.customers.forEach(customer => {
+                    const row = `<tr>
+                        <td>${customer.id}</td>
+                        <td><a href="${customer.detail_url}">${customer.name}</a></td>
+                        <td><img src="${customer.profile_photo}" alt="${customer.name}" style="width: 50px; height: auto;"></td>
+                    </tr>`;
+                    tbody.insertAdjacentHTML('beforeend', row);
+                });
+
+                // Update pagination buttons
+                document.getElementById('prev-button').disabled = !data.has_previous;
+                document.getElementById('next-button').disabled = !data.has_next;
+            });
+    }
+
+    function sortCustomers(field) {
+        if (sortField === field) {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortField = field;
+            sortDirection = 'asc';
+        }
+        fetchCustomers();
+    }
+
+    // Initial fetch
+    document.addEventListener('DOMContentLoaded', () => fetchCustomers());
+</script>
+
+<style>
+    /* General styles */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f9f9f9;
+    }
+    
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+    
+    /* Search input */
+    #search-input {
+        padding: 10px;
+        margin-bottom: 20px;
+        width: 100%;
+        max-width: 400px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    
+    /* Table styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Table headers and cells */
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    th {
+        background-color: #f2f2f2;
+        cursor: pointer;
+    }
+    
+    /* Row hover effect */
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+    
+    /* Image styles */
+    img {
+        border-radius: 50%; /* Makes the profile photo circular */
+    }
+    
+    /* Pagination controls */
+    #pagination-controls {
+        display: flex;
+        justify-content: space-between;
+        max-width: 200px;
+        margin-top: 10px;
+    }
+    
+    /* Button styles */
+    button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+    
+    button:hover:not(:disabled) {
+        background-color: #0056b3;
+    }
+    
+    /* Link styles */
+    a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+    }
+    
+    a:hover {
+        text-decoration: underline;
+    }
+    
+    /* Responsive styles */
+    @media (max-width: 600px) {
+        #search-input {
+            max-width: 100%; /* Full width on small screens */
+        }
+    
+        th, td {
+            padding: 10px; /* Reduce padding for smaller screens */
+        }
+    
+        table {
+            display: block; /* Make table block to allow horizontal scrolling */
+            overflow-x: auto; /* Enable horizontal scroll for table */
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+    
+        #pagination-controls {
+            flex-direction: column; /* Stack buttons on smaller screens */
+            align-items: center; /* Center align the pagination buttons */
+        }
+    }    
+</style>
+{% endblock %}
